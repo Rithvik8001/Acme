@@ -5,12 +5,14 @@ import { prisma } from "../../lib/prisma";
 
 const signupController = async (req: Request, res: Response) => {
   const result = signupValidation(req.body);
+
   if (!result.success) {
     return res.status(400).json({
       success: false,
       message: result.error.issues.map((issue) => issue.message).join(", "),
     });
   }
+
   const { email, password, userName, age, gender, skills, bio } = result.data;
 
   try {
