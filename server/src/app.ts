@@ -21,8 +21,9 @@ app.use(cookieParser());
 
 app.use("/api/v1/auth", authRoute);
 
+const PORT = process.env.PORT as string;
+
 const startServer = async () => {
-  const PORT = process.env.PORT as string;
   try {
     await prisma.$connect().then(() => {
       console.log("Connected to the database");

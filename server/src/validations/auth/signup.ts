@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const signupSchema = z
   .object({
-    email: z.email({ message: "Invalid email address" }),
+    email: z.email({ message: "Invalid email address" }).trim().toLowerCase(),
     password: z
       .string()
       .min(8, { message: "Password must be at least 8 characters long" })
@@ -15,7 +15,8 @@ const signupSchema = z
       ),
     userName: z
       .string()
-      .min(3, { message: "Username must be at least 3 characters long" }),
+      .min(3, { message: "Username must be at least 3 characters long" })
+      .trim(),
     age: z
       .number()
       .min(18, { message: "You must be at least 18 years old" })

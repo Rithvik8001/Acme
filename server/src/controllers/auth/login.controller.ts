@@ -1,16 +1,18 @@
 import { type Request, type Response } from "express";
 import loginValidation from "../../validations/auth/login";
 import { prisma } from "../../lib/prisma";
-import bcrypt from "bcrypt";
 import jwt, { type Secret } from "jsonwebtoken";
+import { createApiError } from "../../utils/api-error";
+import { comparePassword } from "../../utils/password";
 
 const loginController = async (req: Request, res: Response) => {
   const result = loginValidation(req.body);
   if (!result.success) {
-    return res.status(400).json({
-      success: false,
-      message: result.error.issues.map((issue) => issue.message).join(", "),
-    });
+    return createApiError(
+      false,
+      result.error.issues.map((issue) => issue.message).join(", "),
+      400,
+    );
   }
 
   const { email, password } = result.data;
@@ -19,28 +21,19 @@ const loginController = async (req: Request, res: Response) => {
     // check if user exists
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid email or password",
-      });
+      return createApiError(false, "Invalid email or password", 400);
     }
 
     // compare the password
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    const isPasswordCorrect = await comparePassword(password, user.password);
     if (!isPasswordCorrect) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid email or password",
-      });
+      return createApiError(false, "Invalid email or password", 400);
     }
 
     // generate a token
     const secret = process.env.JWT_SECRET_KEY as Secret;
     if (!secret) {
-      return res.status(500).json({
-        success: false,
-        message: "Server configuration error",
-      });
+      return createApiError(false, "Server configuration error", 500);
     }
 
     const expirationTime = 7 * 24 * 60 * 60; // 7 days
@@ -58,22 +51,12 @@ const loginController = async (req: Request, res: Response) => {
 
     const { password: userPassword, ...userData } = user;
 
-    return res.status(200).json({
-      success: true,
-      message: "Login successful.",
-      data: userData,
-    });
+    return createApiError(true, "Login successful.", 200, userData);
   } catch (error) {
     if (error instanceof Error) {
-      return res.status(500).json({
-        success: false,
-        message: error.message,
-      });
+      return createApiError(false, error.message, 500);
     }
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
+    return createApiError(false, "Internal server error", 500);
   }
 };
 
