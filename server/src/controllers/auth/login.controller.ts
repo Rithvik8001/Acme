@@ -2,15 +2,15 @@ import { type Request, type Response } from "express";
 import loginValidation from "../../validations/auth/login";
 import { prisma } from "../../lib/prisma";
 import jwt, { type Secret } from "jsonwebtoken";
-import { createApiError, sendApiError } from "../../utils/api-error";
+import { createApiResult, sendResult } from "../../utils/api-error";
 import { comparePassword } from "../../utils/password";
 
 const loginController = async (req: Request, res: Response) => {
   const result = loginValidation(req.body);
   if (!result.success) {
-    return sendApiError(
+    return sendResult(
       res,
-      createApiError(
+      createApiResult(
         false,
         result.error.issues.map((issue) => issue.message).join(", "),
         400,
@@ -24,27 +24,27 @@ const loginController = async (req: Request, res: Response) => {
     // check if user exists
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      return sendApiError(
+      return sendResult(
         res,
-        createApiError(false, "Invalid email or password", 400),
+        createApiResult(false, "Invalid email or password", 400),
       );
     }
 
     // compare the password
     const isPasswordCorrect = await comparePassword(password, user.password);
     if (!isPasswordCorrect) {
-      return sendApiError(
+      return sendResult(
         res,
-        createApiError(false, "Invalid email or password", 400),
+        createApiResult(false, "Invalid email or password", 400),
       );
     }
 
     // generate a token
-    const secret = process.env["JWT_SECRET_KEY"];
+    const secret = process.env.JWT_SECRET_KEY;
     if (!secret) {
-      return sendApiError(
+      return sendResult(
         res,
-        createApiError(false, "Server configuration error", 500),
+        createApiResult(false, "Server configuration error", 500),
       );
     }
 
@@ -63,17 +63,17 @@ const loginController = async (req: Request, res: Response) => {
 
     const { password: userPassword, ...userData } = user;
 
-    return sendApiError(
+    return sendResult(
       res,
-      createApiError(true, "Login successful.", 200, userData),
+      createApiResult(true, "Login successful.", 200, userData),
     );
   } catch (error) {
     if (error instanceof Error) {
-      return sendApiError(res, createApiError(false, error.message, 500));
+      return sendResult(res, createApiResult(false, error.message, 500));
     }
-    return sendApiError(
+    return sendResult(
       res,
-      createApiError(false, "Internal server error", 500),
+      createApiResult(false, "Internal server error", 500),
     );
   }
 };

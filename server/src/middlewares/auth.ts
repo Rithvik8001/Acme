@@ -1,7 +1,7 @@
 import { type NextFunction, type Request, type Response } from "express";
 import jwt, { type Secret } from "jsonwebtoken";
 import { prisma } from "../lib/prisma";
-import { createApiError, sendApiError } from "../utils/api-error";
+import { createApiResult, sendResult } from "../utils/api-error";
 
 const authMiddleware = async (
   req: Request,
@@ -11,14 +11,14 @@ const authMiddleware = async (
   try {
     const token = req.cookies.token;
     if (!token) {
-      return sendApiError(res, createApiError(false, "Unauthorized", 401));
+      return sendResult(res, createApiResult(false, "Unauthorized", 401));
     }
 
-    const secret = process.env["JWT_SECRET_KEY"];
+    const secret = process.env.JWT_SECRET_KEY;
     if (!secret) {
-      return sendApiError(
+      return sendResult(
         res,
-        createApiError(false, "Server configuration error", 500),
+        createApiResult(false, "Server configuration error", 500),
       );
     }
 
@@ -31,21 +31,21 @@ const authMiddleware = async (
     });
 
     if (!userData) {
-      return sendApiError(res, createApiError(false, "Unauthorized", 401));
+      return sendResult(res, createApiResult(false, "Unauthorized", 401));
     }
 
     req.userId = userData.id;
     next();
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {
-      return sendApiError(res, createApiError(false, "Invalid token", 401));
+      return sendResult(res, createApiResult(false, "Invalid token", 401));
     }
     if (error instanceof Error) {
-      return sendApiError(res, createApiError(false, error.message, 500));
+      return sendResult(res, createApiResult(false, error.message, 500));
     }
-    return sendApiError(
+    return sendResult(
       res,
-      createApiError(false, "Internal server error", 500),
+      createApiResult(false, "Internal server error", 500),
     );
   }
 };

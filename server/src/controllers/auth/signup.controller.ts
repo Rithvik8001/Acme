@@ -1,16 +1,19 @@
 import { type Request, type Response } from "express";
 import signupValidation from "../../validations/auth/signup";
 import { prisma } from "../../lib/prisma";
-import { createApiError, sendApiError } from "../../utils/api-error";
+import {
+  createApiResult,
+  sendResult,
+} from "../../utils/api-error";
 import { hashPasswoord } from "../../utils/password";
 
 const signupController = async (req: Request, res: Response) => {
   const result = signupValidation(req.body);
 
   if (!result.success) {
-    return sendApiError(
+    return sendResult(
       res,
-      createApiError(
+      createApiResult(
         false,
         result.error.issues.map((issue) => issue.message).join(", "),
         400,
@@ -24,9 +27,9 @@ const signupController = async (req: Request, res: Response) => {
     // check if the user already exists
     const user = await prisma.user.findUnique({ where: { email } });
     if (user) {
-      return sendApiError(
+      return sendResult(
         res,
-        createApiError(false, "User already exists", 400),
+        createApiResult(false, "User already exists", 400),
       );
     }
 
@@ -35,9 +38,9 @@ const signupController = async (req: Request, res: Response) => {
       where: { userName: { equals: userName, mode: "insensitive" } },
     });
     if (existingUserName) {
-      return sendApiError(
+      return sendResult(
         res,
-        createApiError(false, "Username is already taken", 400),
+        createApiResult(false, "Username is already taken", 400),
       );
     }
 
@@ -59,9 +62,9 @@ const signupController = async (req: Request, res: Response) => {
 
     const { password: newUserPassword, ...newUserData } = newUser;
 
-    return sendApiError(
+    return sendResult(
       res,
-      createApiError(
+      createApiResult(
         true,
         "User created successfully. Please login to continue.",
         201,
@@ -70,11 +73,11 @@ const signupController = async (req: Request, res: Response) => {
     );
   } catch (error) {
     if (error instanceof Error) {
-      return sendApiError(res, createApiError(false, error.message, 500));
+      return sendResult(res, createApiResult(false, error.message, 500));
     }
-    return sendApiError(
+    return sendResult(
       res,
-      createApiError(false, "Internal server error", 500),
+      createApiResult(false, "Internal server error", 500),
     );
   }
 };

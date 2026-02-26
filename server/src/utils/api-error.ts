@@ -1,10 +1,9 @@
 import { type Response } from "express";
-
-export class ApiError extends Error {
-  success: boolean;
-  message: string;
-  statusCode: number;
-  data?: unknown;
+export class ApiResult extends Error {
+  readonly success: boolean;
+  readonly message: string;
+  readonly statusCode: number;
+  readonly data?: unknown;
 
   constructor(
     success: boolean,
@@ -20,28 +19,26 @@ export class ApiError extends Error {
   }
 }
 
-export const createApiError = (
-  success: boolean,
-  message: string,
-  statusCode: number,
-  data?: unknown,
-): ApiError => {
-  return new ApiError(success, message, statusCode, data);
-};
-
-interface ApiErrorResponse {
+export interface ApiResultJson {
   success: boolean;
   message: string;
   data?: unknown;
 }
 
-export const sendApiError = (res: Response, error: ApiError): Response => {
-  const body: ApiErrorResponse = {
-    success: error.success,
-    message: error.message,
+export const createApiResult = (
+  success: boolean,
+  message: string,
+  statusCode: number,
+  data?: unknown,
+): ApiResult => new ApiResult(success, message, statusCode, data);
+
+export const sendResult = (res: Response, result: ApiResult): Response => {
+  const body: ApiResultJson = {
+    success: result.success,
+    message: result.message,
   };
-  if (error.data !== undefined) {
-    body.data = error.data;
+  if (result.data !== undefined) {
+    body.data = result.data;
   }
-  return res.status(error.statusCode).json(body);
+  return res.status(result.statusCode).json(body);
 };
