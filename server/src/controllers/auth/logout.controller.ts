@@ -1,5 +1,5 @@
 import { type Request, type Response } from "express";
-import { createApiError } from "../../utils/api-error";
+import { createApiError, sendApiError } from "../../utils/api-error";
 
 const logoutController = async (req: Request, res: Response) => {
   try {
@@ -8,12 +8,15 @@ const logoutController = async (req: Request, res: Response) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
-    return createApiError(true, "Logout successful.", 200);
+    return sendApiError(res, createApiError(true, "Logout successful.", 200));
   } catch (error) {
     if (error instanceof Error) {
-      return createApiError(false, error.message, 500);
+      return sendApiError(res, createApiError(false, error.message, 500));
     }
-    return createApiError(false, "Internal server error", 500);
+    return sendApiError(
+      res,
+      createApiError(false, "Internal server error", 500),
+    );
   }
 };
 

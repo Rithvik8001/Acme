@@ -1,5 +1,6 @@
 import express, { type Express } from "express";
 import authRoute from "./routes/auth/route";
+import profileRoute from "./routes/profile/route";
 import cors, { type CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
 import { prisma } from "./lib/prisma";
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/profile", profileRoute);
 
 const PORT = process.env.PORT as string;
 
