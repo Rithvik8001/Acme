@@ -20,8 +20,16 @@ const editProfileController = async (req: Request, res: Response) => {
     );
   }
 
-  const { userName, age, gender, skills, bio, workExperience, education } =
-    result.data;
+  const {
+    userName,
+    age,
+    gender,
+    skills,
+    bio,
+    workExperience,
+    education,
+    githubUrl,
+  } = result.data;
 
   const data: Parameters<typeof prisma.user.update>[0]["data"] = {
     ...(userName !== undefined && { userName }),
@@ -29,6 +37,7 @@ const editProfileController = async (req: Request, res: Response) => {
     ...(gender !== undefined && { gender }),
     ...(skills !== undefined && { skills }),
     ...(bio !== undefined && { bio }),
+    ...(githubUrl !== undefined && { githubUrl }),
   };
 
   if (workExperience !== undefined) {

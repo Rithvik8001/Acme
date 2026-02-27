@@ -65,6 +65,7 @@ const editProfileSchema = z
         }),
       )
       .optional(),
+    githubUrl: z.string().optional(),
   })
   .strict();
 
