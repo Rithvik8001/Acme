@@ -1,11 +1,18 @@
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum ConnectionStatus {
+  interested
+  ignored
+  accepted
+  rejected
 }
 
 model WorkExperience {
@@ -34,20 +41,39 @@ model Education {
 }
 
 model User {
-  id             String           @id @default(uuid())
-  email          String           @unique
-  password       String
-  userName       String           @unique
-  githubUrl      String?
-  age            Int?
-  gender         String?
-  skills         String[]
-  bio            String?
-  workExperience WorkExperience[]
-  education      Education[]
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  id              String           @id @default(uuid())
+  email           String           @unique
+  password        String
+  userName        String           @unique
+  githubUrl       String?
+  age             Int?
+  gender          String?
+  skills          String[]
+  bio             String?
+  workExperience  WorkExperience[]
+  education       Education[]
+  connectionsFrom Connection[]     @relation("FromUser")
+  connectionsTo   Connection[]     @relation("ToUser")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 
   @@index([email])
   @@index([userName])
+}
+
+model Connection {
+  id         String           @id @default(uuid())
+  fromUser   User             @relation("FromUser", fields: [fromUserId], references: [id])
+  fromUserId String
+  toUser     User             @relation("ToUser", fields: [toUserId], references: [id])
+  toUserId   String
+  status     ConnectionStatus @default(interested)
+  actionAt   DateTime         @default(now())
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  @@unique([fromUserId, toUserId])
+  @@index([actionAt])
+  @@index([toUserId, status])
+  @@index([fromUserId, status])
 }

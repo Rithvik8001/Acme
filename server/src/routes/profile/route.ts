@@ -6,8 +6,10 @@ import editPasswordRoute from "./edit-password";
 
 const route: Router = Router();
 
-route.use("/", authMiddleware, meRoute);
-route.use("/", authMiddleware, editProfileRoute);
-route.use("/", authMiddleware, editPasswordRoute);
+route.use(authMiddleware);
+
+route.use("/", meRoute);
+route.use("/", editProfileRoute);
+route.use("/", editPasswordRoute);
 
 export default route;
