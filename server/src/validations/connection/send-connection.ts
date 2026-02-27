@@ -4,7 +4,7 @@ const sendConnectionSchema = z
   .object({
     userId: z.uuid({ message: "Invalid user id" }),
     status: z
-      .enum(["INTERESTED", "IGNORED"], {
+      .enum(["interested", "ignored"], {
         message: "Invalid status",
       })
       .describe("The status of the connection"),

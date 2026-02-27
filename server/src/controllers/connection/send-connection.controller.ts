@@ -11,7 +11,7 @@ const sendConnectionController = async (req: Request, res: Response) => {
   }
   const result = sendConnectionValidation({
     userId: req.params.userId as string,
-    status: req.params.status as "INTERESTED" | "IGNORED",
+    status: req.params.status as "interested" | "ignored",
   });
 
   if (!result.success) {
