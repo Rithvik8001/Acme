@@ -2,6 +2,7 @@ import express, { type Express } from "express";
 import authRoute from "./routes/auth/route";
 import profileRoute from "./routes/profile/route";
 import connectionRoute from "./routes/connection/route";
+import discoverRoute from "./routes/discover/route";
 import cors, { type CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
 import { prisma } from "./lib/prisma";
@@ -12,7 +13,7 @@ const app: Express = express();
 const corsOptions: CorsOptions = {
   origin: process.env.CLIENT_URL as string,
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "application/json"],
   exposedHeaders: ["Content-Type", "Authorization", "application/json"],
 };
@@ -37,6 +38,7 @@ app.get("/health", (_req: Request, res: Response) => {
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/profile", profileRoute);
 app.use("/api/v1/connection", connectionRoute);
+app.use("/api/v1/discover", discoverRoute);
 
 const PORT = process.env.PORT as string;
 

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const unmatchParamsSchema = z
   .object({
-    connectionId: z.string().uuid("Invalid connection id"),
+    connectionId: z.uuid("Invalid connection id"),
   })
   .strict();
 

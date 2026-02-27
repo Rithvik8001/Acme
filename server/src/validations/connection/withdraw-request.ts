@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const withdrawRequestParamsSchema = z
   .object({
-    requestId: z.string().uuid("Invalid request id"),
+    requestId: z.uuid("Invalid request id"),
   })
   .strict();
 
