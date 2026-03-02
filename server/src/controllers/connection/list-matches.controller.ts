@@ -47,7 +47,7 @@ const listMatchesController = async (req: Request, res: Response) => {
     const items = hasMore ? connections.slice(0, take - 1) : connections;
     const nextCursor = hasMore ? items[items.length - 1]?.id : undefined;
 
-    const data = items.map((c) => {
+    const data = items.map((c: any) => {
       const otherUser = c.fromUserId === userId ? c.toUser : c.fromUser;
       return {
         connectionId: c.id,

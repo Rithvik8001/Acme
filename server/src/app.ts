@@ -3,9 +3,11 @@ import authRoute from "./routes/auth/route";
 import profileRoute from "./routes/profile/route";
 import connectionRoute from "./routes/connection/route";
 import discoverRoute from "./routes/discover/route";
+import chatRoute from "./routes/chat/route";
 import cors, { type CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
 import { prisma } from "./lib/prisma";
+import { createSocketInfrastructure } from "./lib/socket";
 import type { Request, Response } from "express";
 
 const app: Express = express();
@@ -39,16 +41,21 @@ app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/profile", profileRoute);
 app.use("/api/v1/connection", connectionRoute);
 app.use("/api/v1/discover", discoverRoute);
+app.use("/api/v1/chat", chatRoute);
 
 const PORT = process.env.PORT as string;
 
 const startServer = async () => {
   try {
-    await prisma.$connect().then(() => {
-      console.log("Connected to the database");
-      app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-      });
+    const { httpServer } = createSocketInfrastructure(app);
+
+    await prisma.$connect();
+    console.log("Connected to the database");
+
+    const portNumber = Number(PORT);
+
+    httpServer.listen(portNumber, () => {
+      console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {
     console.error(error);

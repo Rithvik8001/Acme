@@ -41,21 +41,23 @@ model Education {
 }
 
 model User {
-  id              String           @id @default(uuid())
-  email           String           @unique
-  password        String
-  userName        String           @unique
-  githubUrl       String?
-  age             Int?
-  gender          String?
-  skills          String[]
-  bio             String?
-  workExperience  WorkExperience[]
-  education       Education[]
-  connectionsFrom Connection[]     @relation("FromUser")
-  connectionsTo   Connection[]     @relation("ToUser")
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  id               String           @id @default(uuid())
+  email            String           @unique
+  password         String
+  userName         String           @unique
+  githubUrl        String?
+  age              Int?
+  gender           String?
+  skills           String[]
+  bio              String?
+  workExperience   WorkExperience[]
+  education        Education[]
+  connectionsFrom  Connection[]     @relation("FromUser")
+  connectionsTo    Connection[]     @relation("ToUser")
+  messagesSent     Message[]        @relation("MessageSender")
+  messagesReceived Message[]        @relation("MessageReceiver")
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 
   @@index([email])
   @@index([userName])
@@ -72,8 +74,28 @@ model Connection {
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt
 
+  messages Message[]
+
   @@unique([fromUserId, toUserId])
   @@index([actionAt])
   @@index([toUserId, status])
   @@index([fromUserId, status])
+}
+
+model Message {
+  id           String     @id @default(uuid())
+  connection   Connection @relation(fields: [connectionId], references: [id])
+  connectionId String
+
+  sender   User   @relation("MessageSender", fields: [senderId], references: [id])
+  senderId String
+
+  receiver   User   @relation("MessageReceiver", fields: [receiverId], references: [id])
+  receiverId String
+
+  content   String
+  createdAt DateTime  @default(now())
+  readAt    DateTime?
+
+  @@index([connectionId, createdAt])
 }
