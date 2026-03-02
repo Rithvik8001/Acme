@@ -4,4 +4,6 @@ dist/
 .DS_Store
 .cursor/
 .pnpm-store/
-
+.claude/
+CLAUDE.md
+.cursor/
