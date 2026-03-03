@@ -112,7 +112,11 @@ export default function SignupForm({
                 value={values.age}
                 onChange={(e) => onChange("age", e.target.value)}
               />
-              <Button type="submit" className="w-full mt-4" disabled={submitting}>
+              <Button
+                type="submit"
+                className="w-full mt-4"
+                disabled={submitting}
+              >
                 {submitting ? "Signing up..." : "Sign up"}
               </Button>
               <p className="text-xs text-muted-foreground mt-4 text-center">
