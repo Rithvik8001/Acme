@@ -15,7 +15,9 @@ type TypedSocket = Socket<
   SocketData
 >;
 
-const parseCookies = (cookieHeader: string | undefined): Record<string, string> => {
+const parseCookies = (
+  cookieHeader: string | undefined,
+): Record<string, string> => {
   if (!cookieHeader) return {};
 
   return cookieHeader.split(";").reduce<Record<string, string>>((acc, part) => {
@@ -95,4 +97,3 @@ export const socketAuthMiddleware = async (
     return next(new Error("Internal server error"));
   }
 };
-
