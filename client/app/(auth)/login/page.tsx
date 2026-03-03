@@ -1,25 +1,20 @@
 "use client";
 
-import SignupForm, {
-  type SignupFormValues,
-} from "@/components/(auth)/signup/signup-form";
-import { useSignup } from "@/hooks/useSignup";
+import LoginForm from "@/components/(auth)/login/login-form";
+import { useLogin, type LoginFormValues } from "@/hooks/useLogin";
 
-const initialValues: SignupFormValues = {
-  userName: "",
+const initialValues: LoginFormValues = {
   email: "",
   password: "",
-  confirmPassword: "",
-  age: "",
 };
 
-export default function SignupPage() {
+export default function LoginPage() {
   const { values, loading, handleChange, handleSubmit } =
-    useSignup(initialValues);
+    useLogin(initialValues);
 
   return (
     <div className="min-h-screen flex items-center justify-center mx-auto max-w-sm w-full px-6">
-      <SignupForm
+      <LoginForm
         values={values}
         onChange={handleChange}
         onSubmit={handleSubmit}

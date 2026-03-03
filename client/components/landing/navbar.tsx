@@ -8,7 +8,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 h-14 flex items-center bg-background/95 backdrop-blur-sm border-b border-border">
-      <div className="w-full px-6 grid grid-cols-3 items-center">
+      <div className="w-full px-6 flex items-center justify-between md:grid md:grid-cols-3">
         <Link
           href="/"
           className="text-[1.1rem] leading-none text-foreground justify-self-start"
@@ -23,43 +23,44 @@ export function Navbar() {
           <NavLink href="#discover">Discover</NavLink>
         </nav>
 
-        <div className="hidden md:flex items-center gap-1 justify-self-end">
-          <Link
-            href="/login"
-            className="text-xs px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
+        <div className="flex items-center gap-1 justify-self-end">
+          <div className="hidden md:flex items-center gap-1">
+            <Link
+              href="/login"
+              className="text-xs px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Sign in
+            </Link>
+            <Link
+              href="/signup"
+              className="text-xs px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+            >
+              Get started →
+            </Link>
+          </div>
+          <button
+            className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8 text-foreground"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle navigation menu"
+            aria-expanded={mobileOpen}
           >
-            Sign in
-          </Link>
-          <Link
-            href="/signup"
-            className="text-xs px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-          >
-            Get started →
-          </Link>
+            <span
+              className={`h-px w-5 bg-current transition-transform duration-200 origin-center ${
+                mobileOpen ? "rotate-45 translate-y-[7px]" : ""
+              }`}
+            />
+            <span
+              className={`h-px w-5 bg-current transition-opacity duration-200 ${
+                mobileOpen ? "opacity-0" : ""
+              }`}
+            />
+            <span
+              className={`h-px w-5 bg-current transition-transform duration-200 origin-center ${
+                mobileOpen ? "-rotate-45 -translate-y-[7px]" : ""
+              }`}
+            />
+          </button>
         </div>
-
-        <button
-          className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8 text-foreground justify-self-end"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle navigation menu"
-          aria-expanded={mobileOpen}
-        >
-          <span
-            className={`h-px w-5 bg-current transition-transform duration-200 origin-center ${
-              mobileOpen ? "rotate-45 translate-y-[7px]" : ""
-            }`}
-          />
-          <span
-            className={`h-px w-5 bg-current transition-opacity duration-200 ${
-              mobileOpen ? "opacity-0" : ""
-            }`}
-          />
-          <span
-            className={`h-px w-5 bg-current transition-transform duration-200 origin-center ${
-              mobileOpen ? "-rotate-45 -translate-y-[7px]" : ""
-            }`}
-          />
-        </button>
       </div>
 
       {mobileOpen && (
