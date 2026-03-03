@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express, { type Express } from "express";
 import authRoute from "./routes/auth/route";
 import profileRoute from "./routes/profile/route";
@@ -12,12 +13,23 @@ import type { Request, Response } from "express";
 
 const app: Express = express();
 
+const allowedOrigin = process.env.CLIENT_URL as string;
+
 const corsOptions: CorsOptions = {
-  origin: process.env.CLIENT_URL as string,
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigin && origin === allowedOrigin) return callback(null, true);
+    if (
+      process.env["NODE_ENV"] !== "production" &&
+      /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)
+    )
+      return callback(null, true);
+    callback(null, false);
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "application/json"],
-  exposedHeaders: ["Content-Type", "Authorization", "application/json"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  exposedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));

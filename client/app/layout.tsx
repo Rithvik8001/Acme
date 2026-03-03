@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Roboto_Slab } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 const geistMono = Geist_Mono({
   variable: "--font-inter-mono",
@@ -32,6 +33,7 @@ export default function RootLayout({
         <div className="max-w-5xl mx-auto border-l border-r border-border min-h-screen">
           {children}
         </div>
+        <Toaster />
       </body>
     </html>
   );

@@ -1,10 +1,35 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
+import { signup } from "@/services/auth";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function SignupForm() {
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData) as Record<string, string>;
+    const payload: Parameters<typeof signup>[0] = {
+      email: data.email ?? "",
+      userName: data.userName ?? "",
+      password: data.password ?? "",
+      ...(data.age && { age: Number(data.age) }),
+    };
+    const response = await signup(payload);
+    if (response.success) {
+      toast.success(response.message);
+      router.push("/login");
+    } else {
+      toast.error(response.message);
+    }
+  };
+
   return (
     <>
       <div className="w-full">
@@ -21,7 +46,7 @@ export default function SignupForm() {
         <p className="text-sm text-muted-foreground">
           Create an account to get started.
         </p>
-        <form className="mt-6">
+        <form className="mt-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="username" className="text-xs mb-1 block">
@@ -30,6 +55,7 @@ export default function SignupForm() {
               <Input
                 type="text"
                 id="username"
+                name="userName"
                 placeholder="Enter your username (e.g. john_doe)"
                 className="text-xs h-9 focus-visible:ring-0 focus-visible:ring-offset-0"
               />
@@ -42,6 +68,7 @@ export default function SignupForm() {
               <Input
                 type="email"
                 id="email"
+                name="email"
                 placeholder="Enter you email address"
                 className="text-xs h-9 focus-visible:ring-0 focus-visible:ring-offset-0"
               />
@@ -51,6 +78,7 @@ export default function SignupForm() {
               <Input
                 type="password"
                 id="password"
+                name="password"
                 placeholder="Enter your password"
                 className="text-xs h-9 focus-visible:ring-0 focus-visible:ring-offset-0"
               />
@@ -74,6 +102,7 @@ export default function SignupForm() {
               <Input
                 type="number"
                 id="age"
+                name="age"
                 placeholder="Enter your age"
                 className="text-xs h-9 focus-visible:ring-0 focus-visible:ring-offset-0"
               />
