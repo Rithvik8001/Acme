@@ -2,11 +2,11 @@ export interface ConnectionSafeUser {
   id: string;
   email: string;
   userName: string;
-  githubUrl: string | null;
-  age: number | null;
-  gender: string | null;
+  githubUrl: string;
+  age: number;
+  gender: string;
   skills: string[];
-  bio: string | null;
+  bio: string;
   createdAt: string;
   updatedAt: string;
 }

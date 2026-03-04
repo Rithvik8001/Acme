@@ -5,7 +5,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum ConnectionStatus {
@@ -45,11 +44,11 @@ model User {
   email            String           @unique
   password         String
   userName         String           @unique
-  githubUrl        String?
-  age              Int?
-  gender           String?
+  githubUrl        String
+  age              Int
+  gender           String
   skills           String[]
-  bio              String?
+  bio              String
   workExperience   WorkExperience[]
   education        Education[]
   connectionsFrom  Connection[]     @relation("FromUser")

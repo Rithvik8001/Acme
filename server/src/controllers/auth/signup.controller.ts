@@ -21,7 +21,8 @@ const signupController = async (req: Request, res: Response) => {
     );
   }
 
-  const { email, password, userName, age, gender, skills, bio } = result.data;
+  const { email, password, userName, githubUrl, age, gender, skills, bio } =
+    result.data;
 
   try {
     // check if the user already exists
@@ -53,10 +54,11 @@ const signupController = async (req: Request, res: Response) => {
         email,
         password: hashedPassword,
         userName,
-        skills: skills ?? [],
-        ...(age !== undefined && { age }),
-        ...(gender !== undefined && { gender }),
-        ...(bio !== undefined && { bio }),
+        githubUrl,
+        age,
+        gender,
+        skills,
+        bio,
       },
     });
 

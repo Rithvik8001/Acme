@@ -10,7 +10,11 @@ const initialValues: SignupFormValues = {
   email: "",
   password: "",
   confirmPassword: "",
+  githubUrl: "",
   age: "",
+  gender: "",
+  skills: "",
+  bio: "",
 };
 
 export default function SignupPage() {
