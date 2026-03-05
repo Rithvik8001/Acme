@@ -2,10 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { getDiscover } from "@/services/discover";
-import type {
-  ConnectionSafeUser,
-  DiscoverListParams,
-} from "@/types/api";
+import type { ConnectionSafeUser, DiscoverListParams } from "@/types/api";
 
 export interface UseDiscoverResult {
   data: ConnectionSafeUser[];
@@ -51,11 +48,7 @@ export function useDiscover(params: DiscoverListParams): UseDiscoverResult {
         setLoadingMore(false);
       }
     },
-    [
-      params.limit,
-      params.skills?.join(","),
-      params.excludeConnections,
-    ]
+    [params.limit, params.skills?.join(","), params.excludeConnections],
   );
 
   const refetch = useCallback(async () => {

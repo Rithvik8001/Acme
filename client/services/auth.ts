@@ -38,4 +38,9 @@ const loginService = async (data: LoginSchema) => {
   return { success, message, statusCode, data: responseData };
 };
 
-export { signupService as signup, loginService as login };
+const logoutService = async () => {
+  const response = await axiosOptionsInstance.post("api/v1/auth/logout");
+  return response.data as { success: boolean; message: string };
+};
+
+export { signupService as signup, loginService as login, logoutService as logout };
