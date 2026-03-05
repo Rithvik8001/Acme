@@ -34,7 +34,7 @@ export async function listIncoming(
 ): Promise<ConnectionListResponse<IncomingConnection>> {
   const response = await axiosOptionsInstance.get<
     ApiResult<ConnectionListResponse<IncomingConnection>>
-  >("api/v1/connection/list/incoming", { params });
+  >("api/v1/connection/requests/incoming", { params });
   const body = response.data;
   if (!body.success || body.data === undefined) {
     throw new Error(body.message ?? "Failed to fetch incoming requests");
@@ -47,7 +47,7 @@ export async function listSent(
 ): Promise<ConnectionListResponse<SentConnection>> {
   const response = await axiosOptionsInstance.get<
     ApiResult<ConnectionListResponse<SentConnection>>
-  >("api/v1/connection/list/sent", { params });
+  >("api/v1/connection/requests/sent", { params });
   const body = response.data;
   if (!body.success || body.data === undefined) {
     throw new Error(body.message ?? "Failed to fetch sent requests");
@@ -60,7 +60,7 @@ export async function listMatches(
 ): Promise<ConnectionListResponse<Match>> {
   const response = await axiosOptionsInstance.get<
     ApiResult<ConnectionListResponse<Match>>
-  >("api/v1/connection/list/matches", { params });
+  >("api/v1/connection/matches", { params });
   const body = response.data;
   if (!body.success || body.data === undefined) {
     throw new Error(body.message ?? "Failed to fetch matches");
