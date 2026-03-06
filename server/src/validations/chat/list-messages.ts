@@ -2,17 +2,14 @@ import { z } from "zod";
 
 export const listMessagesQuerySchema = z
   .object({
-    connectionId: z.string().uuid({ message: "Invalid connection id" }),
+    connectionId: z.uuid({ message: "Invalid connection id" }),
     limit: z.coerce
       .number()
       .min(1, { message: "Limit must be at least 1" })
       .max(100, { message: "Limit must be at most 100" })
       .optional()
       .default(20),
-    cursor: z
-      .string()
-      .uuid({ message: "Invalid cursor" })
-      .optional(),
+    cursor: z.uuid({ message: "Invalid cursor" }).optional(),
   })
   .strict();
 
@@ -23,4 +20,3 @@ const listMessagesValidation = (data: unknown) => {
 };
 
 export default listMessagesValidation;
-

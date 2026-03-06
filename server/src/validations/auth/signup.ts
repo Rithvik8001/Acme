@@ -2,11 +2,7 @@ import { z } from "zod";
 
 const signupSchema = z
   .object({
-    email: z
-      .string()
-      .email({ message: "Invalid email address" })
-      .trim()
-      .toLowerCase(),
+    email: z.email({ message: "Invalid email address" }).trim().toLowerCase(),
     password: z
       .string()
       .min(8, { message: "Password must be at least 8 characters long" })
@@ -22,12 +18,11 @@ const signupSchema = z
       .min(3, { message: "Username must be at least 3 characters long" })
       .trim(),
     githubUrl: z
-      .string()
-      .min(1, { message: "GitHub URL is required" })
       .url({ message: "Invalid GitHub URL" })
+      .min(1, { message: "GitHub URL is required" })
       .trim(),
-    age: z
-      .coerce.number()
+    age: z.coerce
+      .number()
       .min(18, { message: "You must be at least 18 years old" }),
     gender: z.enum(["male", "female", "other"], {
       message: "Invalid gender",
@@ -35,10 +30,7 @@ const signupSchema = z
     skills: z
       .array(z.string().min(1))
       .min(1, { message: "You must have at least one skill" }),
-    bio: z
-      .string()
-      .min(1, { message: "Bio is required" })
-      .trim(),
+    bio: z.string().min(1, { message: "Bio is required" }).trim(),
   })
   .strict();
 

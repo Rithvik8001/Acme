@@ -2,7 +2,9 @@ import axiosOptionsInstance from "@/utils/axios";
 import type { ApiResult, User, WorkExperience, Education } from "@/types/api";
 
 export async function getMe(): Promise<User> {
-  const response = await axiosOptionsInstance.get<ApiResult<User>>("api/v1/profile/me");
+  const response = await axiosOptionsInstance.get<ApiResult<User>>("api/v1/profile/me", {
+    params: { _t: Date.now() },
+  });
   const body = response.data;
   if (!body.success || body.data === undefined) {
     throw new Error(body.message ?? "Failed to fetch profile");

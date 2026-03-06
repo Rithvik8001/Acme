@@ -1,0 +1,28 @@
+info:
+  name: signup
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3001/api/v1/auth/signup
+  body:
+    type: json
+    data: |-
+      {
+        "email": "rithvik.reddy0531@gmail.com",
+        "password": "Ggmu@143!",
+        "userName":"Rebel0001",
+        "age": 25,
+        "gender": "male",
+        "githubUrl": "https://github.com/Rithvik8001",
+        "skills":["typescript","javascript"],
+        "bio":"This is about me"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

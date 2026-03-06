@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useMe } from "@/hooks/useMe";
 import { logout } from "@/services/auth";
+import { disconnectSocket } from "@/utils/socket";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +28,7 @@ export function AppNavbar() {
     try {
       setLoggingOut(true);
       await logout();
+      disconnectSocket();
       router.push("/");
     } catch {
       toast.error("Failed to log out");

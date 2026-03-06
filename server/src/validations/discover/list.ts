@@ -8,11 +8,16 @@ const listDiscoverQuerySchema = z
       .max(50, "Limit must be at most 50")
       .optional()
       .default(20),
-    cursor: z.string().uuid("Invalid cursor").optional(),
+    cursor: z.uuid("Invalid cursor").optional(),
     skills: z
       .union([
         z.string().transform((s) =>
-          s ? s.split(",").map((x) => x.trim()).filter(Boolean) : [],
+          s
+            ? s
+                .split(",")
+                .map((x) => x.trim())
+                .filter(Boolean)
+            : [],
         ),
         z.array(z.string()),
       ])

@@ -1,4 +1,5 @@
 import { type Response } from "express";
+
 export class ApiResult extends Error {
   readonly success: boolean;
   readonly message: string;

@@ -28,16 +28,23 @@ export interface UseProfileResult {
   handleEditProfile: (data: EditProfilePayload) => Promise<void>;
   handleEditPassword: (data: EditPasswordPayload) => Promise<void>;
   handleAddWorkExperience: (data: WorkExperiencePayload) => Promise<void>;
-  handleEditWorkExperience: (id: string, data: Partial<WorkExperiencePayload>) => Promise<void>;
+  handleEditWorkExperience: (
+    id: string,
+    data: Partial<WorkExperiencePayload>,
+  ) => Promise<void>;
   handleDeleteWorkExperience: (id: string) => Promise<void>;
   handleAddEducation: (data: EducationPayload) => Promise<void>;
-  handleEditEducation: (id: string, data: Partial<EducationPayload>) => Promise<void>;
+  handleEditEducation: (
+    id: string,
+    data: Partial<EducationPayload>,
+  ) => Promise<void>;
   handleDeleteEducation: (id: string) => Promise<void>;
 }
 
 function getErrorMessage(err: unknown): string {
   if (err && typeof err === "object" && "response" in err) {
-    const res = (err as { response?: { data?: { message?: string } } }).response;
+    const res = (err as { response?: { data?: { message?: string } } })
+      .response;
     if (res?.data?.message) return res.data.message;
   }
   return err instanceof Error ? err.message : "Something went wrong";
@@ -74,22 +81,19 @@ export function useProfile(): UseProfileResult {
     void fetchProfile();
   }, [fetchProfile]);
 
-  const handleEditProfile = useCallback(
-    async (data: EditProfilePayload) => {
-      setSaving(true);
-      try {
-        const updated = await editProfile(data);
-        setUser((prev) => (prev ? { ...prev, ...updated } : prev));
-        toast.success("Profile updated");
-      } catch (err) {
-        toast.error(getErrorMessage(err));
-        throw err;
-      } finally {
-        setSaving(false);
-      }
-    },
-    [],
-  );
+  const handleEditProfile = useCallback(async (data: EditProfilePayload) => {
+    setSaving(true);
+    try {
+      const updated = await editProfile(data);
+      setUser((prev) => (prev ? { ...prev, ...updated } : prev));
+      toast.success("Profile updated");
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+      throw err;
+    } finally {
+      setSaving(false);
+    }
+  }, []);
 
   const handleEditPassword = useCallback(async (data: EditPasswordPayload) => {
     setSaving(true);
@@ -104,21 +108,26 @@ export function useProfile(): UseProfileResult {
     }
   }, []);
 
-  const handleAddWorkExperience = useCallback(async (data: WorkExperiencePayload) => {
-    setSaving(true);
-    try {
-      const newEntry = await addWorkExperience(data);
-      setUser((prev) =>
-        prev ? { ...prev, workExperience: [...prev.workExperience, newEntry] } : prev,
-      );
-      toast.success("Work experience added");
-    } catch (err) {
-      toast.error(getErrorMessage(err));
-      throw err;
-    } finally {
-      setSaving(false);
-    }
-  }, []);
+  const handleAddWorkExperience = useCallback(
+    async (data: WorkExperiencePayload) => {
+      setSaving(true);
+      try {
+        const newEntry = await addWorkExperience(data);
+        setUser((prev) =>
+          prev
+            ? { ...prev, workExperience: [...prev.workExperience, newEntry] }
+            : prev,
+        );
+        toast.success("Work experience added");
+      } catch (err) {
+        toast.error(getErrorMessage(err));
+        throw err;
+      } finally {
+        setSaving(false);
+      }
+    },
+    [],
+  );
 
   const handleEditWorkExperience = useCallback(
     async (id: string, data: Partial<WorkExperiencePayload>) => {
@@ -129,7 +138,9 @@ export function useProfile(): UseProfileResult {
           prev
             ? {
                 ...prev,
-                workExperience: prev.workExperience.map((w) => (w.id === id ? updated : w)),
+                workExperience: prev.workExperience.map((w) =>
+                  w.id === id ? updated : w,
+                ),
               }
             : prev,
         );
@@ -150,7 +161,10 @@ export function useProfile(): UseProfileResult {
       await deleteWorkExperience(id);
       setUser((prev) =>
         prev
-          ? { ...prev, workExperience: prev.workExperience.filter((w) => w.id !== id) }
+          ? {
+              ...prev,
+              workExperience: prev.workExperience.filter((w) => w.id !== id),
+            }
           : prev,
       );
       toast.success("Work experience deleted");
@@ -186,7 +200,9 @@ export function useProfile(): UseProfileResult {
           prev
             ? {
                 ...prev,
-                education: prev.education.map((e) => (e.id === id ? updated : e)),
+                education: prev.education.map((e) =>
+                  e.id === id ? updated : e,
+                ),
               }
             : prev,
         );
@@ -206,7 +222,9 @@ export function useProfile(): UseProfileResult {
     try {
       await deleteEducation(id);
       setUser((prev) =>
-        prev ? { ...prev, education: prev.education.filter((e) => e.id !== id) } : prev,
+        prev
+          ? { ...prev, education: prev.education.filter((e) => e.id !== id) }
+          : prev,
       );
       toast.success("Education deleted");
     } catch (err) {

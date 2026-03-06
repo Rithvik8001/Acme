@@ -38,10 +38,12 @@ export function useChat(connectionId: string): UseChatResult {
     };
 
     const onMessage = (msg: ChatMessage) => {
+      const isPending = !!msg.clientMessageId && pendingIds.current.has(msg.clientMessageId);
+      if (isPending) pendingIds.current.delete(msg.clientMessageId!);
+
       setMessages((prev) => {
         if (prev.some((m) => m.id === msg.id)) return prev;
-        if (msg.clientMessageId && pendingIds.current.has(msg.clientMessageId)) {
-          pendingIds.current.delete(msg.clientMessageId);
+        if (isPending) {
           return prev.map((m) =>
             m.clientMessageId === msg.clientMessageId ? msg : m,
           );
